@@ -5,3 +5,5 @@
 azure-functions
 Flask
 qrcode[pil]
+qrcode
+Pillow

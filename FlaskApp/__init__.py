@@ -25,8 +25,8 @@ def module():
 
 
 
-@app.route("/qrcodeapi", methods=["POST"])
-def qrcode():
+@app.route("/qrcode_post", methods=["POST"])
+def qrcode_post():
     data = request.json
     employee_id = data.get("EmployeeID")
 
@@ -42,10 +42,9 @@ def qrcode():
     return jsonify({"QRCodeBase64": img_base64})
 
 
-@app.route("/qrcode", methods=["GET"])
-def qrcode_route():
-    employee_id = request.args.get("EmployeeID")  
-
+@app.route("/qrcode_get/<employee_id>", methods=["GET"])
+def qrcode_get(employee_id: str):
+   
     if not employee_id:
         return jsonify({"error": "Missing EmployeeID"}), 
 
