@@ -4,3 +4,4 @@
 
 azure-functions
 Flask
+qrcode[pil]

@@ -1,4 +1,7 @@
-from flask import Flask
+from flask import Flask, request, jsonify
+import qrcode
+import base64
+from io import BytesIO
 
 # Always use relative import for custom module
 from .package.module import MODULE_VALUE
@@ -19,6 +22,39 @@ def hello(name: str):
 @app.route("/module")
 def module():
     return f"loaded from FlaskApp.package.module = {MODULE_VALUE}"
+
+
+
+@app.route("/qrcodeapi", methods=["POST"])
+def qrcode():
+    data = request.json
+    employee_id = data.get("EmployeeID")
+
+    if not employee_id:
+        return jsonify({"error": "Missing EmployeeID"}), 400
+
+
+    qr = qrcode.make(employee_id)
+    buffered = BytesIO()
+    qr.save(buffered, format="PNG")
+    img_base64 = base64.b64encode(buffered.getvalue()).decode()
+
+    return jsonify({"QRCodeBase64": img_base64})
+
+
+@app.route("/qrcode", methods=["GET"])
+def qrcode_route():
+    employee_id = request.args.get("EmployeeID")  
+
+    if not employee_id:
+        return jsonify({"error": "Missing EmployeeID"}), 
+
+    qr = qrcode.make(employee_id)
+    buffered = BytesIO()
+    qr.save(buffered, format="PNG")
+    img_base64 = base64.b64encode(buffered.getvalue()).decode()
+
+    return img_base64
 
 if __name__ == "__main__":
     app.run()
